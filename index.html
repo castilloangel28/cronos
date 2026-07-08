@@ -4,16 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRONOS - Nakama Realtime Neon</title>
-    <!-- Importación de Google Fonts: Orbitron, Rajdhani y Montserrat -->
+    <!-- Importación de Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Orbitron:wght@900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     
     <style>
         body { 
             font-family: 'Montserrat', sans-serif;
-            /* Fondo ultra oscuro con silueta temática de One Piece en el centro */
-            background: linear-gradient(rgba(0, 0, 0, 0.93), rgba(5, 5, 10, 0.97)), 
-                        url('https://images8.alphacoders.com/134/1345917.png') no-repeat center center fixed;
-            background-size: cover;
+            background: radial-gradient(circle at center, #0d0d26 0%, #020208 100%);
             color: #00f3ff; 
             padding: 20px; 
             display: flex; 
@@ -23,23 +20,48 @@
             margin: 0;
             box-sizing: border-box;
             text-shadow: 0 0 5px #00f3ff;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: -1;
         }
         
-        /* Contenedor con super resplandor Neón Cian */
         .container { 
-            background-color: rgba(5, 5, 12, 0.9); 
+            background-color: rgba(4, 4, 10, 0.92); 
             padding: 30px; 
             border-radius: 20px; 
             border: 3px solid #00f3ff;
-            box-shadow: 0 0 20px #00f3ff, inset 0 0 15px rgba(0, 243, 255, 0.3); 
+            box-shadow: 0 0 25px #00f3ff, inset 0 0 20px rgba(0, 243, 255, 0.2); 
             max-width: 450px; 
             width: 100%; 
             text-align: center;
             backdrop-filter: blur(10px);
             margin: auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::after {
+            content: "☠️";
+            position: absolute;
+            bottom: -30px;
+            right: -20px;
+            font-size: 140px;
+            opacity: 0.06;
+            color: #ffaa00;
+            transform: rotate(-15deg);
+            pointer-events: none;
+            filter: drop-shadow(0 0 10px #ffaa00);
         }
         
-        /* Título Principal usando Orbitron - Neón Magenta Intenso */
         h1 { 
             font-family: 'Orbitron', sans-serif;
             color: #ff0055; 
@@ -60,9 +82,8 @@
             text-shadow: 0 0 10px #00f3ff;
         }
         
-        #loginSection { display: block; }
+        #loginSection { display: block; position: relative; z-index: 2; }
         
-        /* Input del PIN - Neón Morado con letras Neón Cian */
         .pin-input { 
             font-family: 'Montserrat', sans-serif;
             font-size: 26px; 
@@ -86,9 +107,8 @@
             text-shadow: 0 0 10px #ff0055;
         }
         
-        #mainSection { display: none; }
+        #mainSection { display: none; position: relative; z-index: 2; }
         
-        /* Bienvenida usando Rajdhani - Neón Verde Lima */
         .bienvenida { 
             font-family: 'Rajdhani', sans-serif;
             color: #39ff14; 
@@ -112,7 +132,6 @@
             text-transform: uppercase;
         }
         
-        /* Selectores - Todo Neón Morado y letras brillantes */
         select { 
             font-family: 'Montserrat', sans-serif;
             width: 100%; 
@@ -142,7 +161,6 @@
             text-shadow: none;
         }
         
-        /* Botón de Entrada General Neón */
         .btn-neon { 
             font-family: 'Rajdhani', sans-serif;
             width: 100%; 
@@ -168,7 +186,6 @@
             text-shadow: none;
         }
         
-        /* Bloque de Respuestas en Tiempo Real */
         .resultados { 
             margin-top: 30px; 
             padding-top: 20px; 
@@ -184,7 +201,6 @@
             text-shadow: 0 0 8px #00f3ff;
             letter-spacing: 1px;
         }
-        /* Valores numéricos resaltados en Neón Magenta gigante usando Orbitron */
         .resultado-val { 
             font-family: 'Orbitron', sans-serif;
             font-weight: bold; 
@@ -208,42 +224,41 @@
 <body>
 
 <div class="container">
-    <h1>CRONOS</h1>
-    <div class="subtitle">Nakama Realtime</div>
+    <h1>⚓ CRONOS ⚓</h1>
+    <div class="subtitle">🏴‍☠️ Nakama Realtime 🏴‍☠️</div>
 
     <!-- SECCIÓN 1: LOGIN POR PIN -->
     <div id="loginSection">
-        <label style="text-align: center;" for="userPin">Ingrese su PIN de Tripulación</label>
+        <label style="text-align: center;" for="userPin">🔑 Ingrese su PIN de Tripulación 🔑</label>
         <input type="password" id="userPin" class="pin-input" maxlength="4" placeholder="••••">
-        <button class="btn-neon" onclick="verificarAcceso()">INGRESAR</button>
+        <button class="btn-neon" onclick="verificarAcceso()">⛵ ¡AL ABORDAJE!</button>
     </div>
 
     <!-- SECCIÓN 2: BUSCADOR PRINCIPAL (TIEMPO REAL) -->
     <div id="mainSection">
         <div id="msgBienvenida" class="bienvenida"></div>
-        <div id="loading">Sincronizando Bitácora Marina...</div>
+        <div id="loading">🌊 Sincronizando Bitácora Marina...</div>
 
-        <label for="estilo">Estilo</label>
+        <label for="estilo">👕 Estilo (Logpose)</label>
         <select id="estilo" onchange="actualizarTallas()" disabled>
-            <option value="">Seleccione un estilo...</option>
+            <option value="">🗺️ Seleccione un estilo...</option>
         </select>
 
-        <label for="talla">Talla</label>
+        <label for="talla">📐 Talla (Medida)</label>
         <select id="talla" onchange="actualizarOperaciones()" disabled>
-            <option value="">Seleccione una talla...</option>
+            <option value="">⚔️ Seleccione una talla...</option>
         </select>
 
-        <!-- Al cambiar la operación calcula en tiempo real de inmediato -->
-        <label for="operacion">Operación</label>
+        <label for="operacion">⚙️ Operación (Combate)</label>
         <select id="operacion" onchange="calcularMetasTiempoReal()" disabled>
-            <option value="">Seleccione una operación...</option>
+            <option value="">👒 Seleccione una operación...</option>
         </select>
 
         <!-- RESULTADOS AUTOMÁTICOS ASÍNCRONOS -->
         <div id="resultados" class="resultados">
-            <div class="resultado-item">Meta por Turno: <span id="resMeta" class="resultado-val">0</span> docenas</div>
-            <div class="resultado-item">Docenas por Hora: <span id="resDozenHora" class="resultado-val">0</span> dz/hr</div>
-            <div class="resultado-item">Piezas por Minuto: <span id="resPzasMin" class="resultado-val">0</span> pzas/min</div>
+            <div class="resultado-item">👑 Meta por Turno: <span id="resMeta" class="resultado-val">0</span> dz</div>
+            <div class="resultado-item">⏱️ Docenas por Hora: <span id="resDozenHora" class="resultado-val">0</span> dz/hr</div>
+            <div class="resultado-item">🔥 Piezas por Minuto: <span id="resPzasMin" class="resultado-val">0</span> pz/min</div>
         </div>
     </div>
 </div>
@@ -254,23 +269,24 @@ const SHEET_ID = '1SBsIDmwEZTarfIvZsuOl1nTC0AbkIDZa';
 let bddMetas = [];
 const HORAS_TURNO = 9;
 
+// Usuarios autorizados con sus emojis insignia de la tripulación
 const usuariosAutorizados = [
-    { pin: "2004", nombre: "Angel Castillo" },
-    { pin: "5863", nombre: "Kevin Ramón Pineda" },
+    { pin: "2004", nombre: "Angel Castillo 👒" },
+    { pin: "5863", nombre: "Kevin Ramón Pineda ⚔️" },
     { pin: "8198", nombre: "Carlos David Garcia 🦅" },
-    { pin: "1734", nombre: "Libny Castillo" },
-    { pin: "4321", nombre: "Derick Alexander Carvajal" },
-    { pin: "3455", nombre: "Josué Rivera" },
-    { pin: "1301", nombre: "Jack Perdomo" },
+    { pin: "1734", nombre: "Libny Castillo ⚡" },
+    { pin: "4321", nombre: "Derick Alexander Carvajal 🔥" },
+    { pin: "3455", nombre: "Josué Rivera 🌀" },
+    { pin: "1301", nombre: "Jack Perdomo 🦈" },
     { pin: "2064", nombre: "Arnoldo Alvarenga🤠" },
-    { pin: "2711", nombre: "Yervi Mejia" },
-    { pin: "3855", nombre: "Yeison Murillo" },
-    { pin: "5037", nombre: "Kevin Díaz" },
-    { pin: "4005", nombre: "Erik Rosales" },
-    { pin: "1507", nombre: "Fernando Sanchez" },
-    { pin: "3307", nombre: "Edwin Alvarado" },
-    { pin: "3310", nombre: "Angel Flores" },
-    { pin: "1800", nombre: "Usuario Invitado" }
+    { pin: "2711", nombre: "Yervi Mejia 🐯" },
+    { pin: "3855", nombre: "Yeison Murillo 💀" },
+    { pin: "5037", nombre: "Kevin Díaz 🍃" },
+    { pin: "4005", nombre: "Erik Rosales ❄️" },
+    { pin: "1507", nombre: "Fernando Sanchez 🦾" },
+    { pin: "3307", nombre: "Edwin Alvarado 👑" },
+    { pin: "3310", nombre: "Angel Flores 🏹" },
+    { pin: "1800", nombre: "Usuario Invitado 🗺️" }
 ];
 
 function verificarAcceso() {
@@ -280,10 +296,10 @@ function verificarAcceso() {
     if (usuario) {
         document.getElementById('loginSection').style.display = 'none';
         document.getElementById('mainSection').style.display = 'block';
-        document.getElementById('msgBienvenida').innerText = `¡Al abordaje, Nakama ${usuario.nombre}!`;
+        document.getElementById('msgBienvenida').innerText = `🏴‍☠️ ¡Al abordaje, Nakama ${usuario.nombre}!`;
         conectarConGoogleSheets();
     } else {
-        alert("PIN incorrecto. Intente de nuevo.");
+        alert("❌ ¡PIN incorrecto, marinero! Intente de nuevo.");
         document.getElementById('userPin').value = "";
     }
 }
@@ -310,20 +326,20 @@ function conectarConGoogleSheets() {
             inicializarEstilos();
         })
         .catch(err => {
-            alert("Error de conexión con la base de datos.");
+            alert("❌ Error de comunicación con el barco base.");
             console.error(err);
         });
 }
 
 function inicializarEstilos() {
     const comboEstilo = document.getElementById('estilo');
-    comboEstilo.innerHTML = '<option value="">Seleccione un estilo...</option>';
+    comboEstilo.innerHTML = '<option value="">🗺️ Seleccione un estilo...</option>';
     comboEstilo.disabled = false;
     
     const estilosUnicos = [...new Set(bddMetas.map(item => item.estilo).filter(Boolean))];
     estilosUnicos.sort().forEach(estilo => {
         let opt = document.createElement('option');
-        opt.value = estilo; opt.innerHTML = estilo;
+        opt.value = estilo; opt.innerHTML = `👕 ${estilo}`;
         comboEstilo.appendChild(opt);
     });
 }
@@ -334,8 +350,8 @@ function actualizarTallas() {
     const comboOperacion = document.getElementById('operacion');
     const divResultados = document.getElementById('resultados');
     
-    comboTalla.innerHTML = '<option value="">Seleccione una talla...</option>';
-    comboOperacion.innerHTML = '<option value="">Seleccione una operación...</option>';
+    comboTalla.innerHTML = '<option value="">⚔️ Seleccione una talla...</option>';
+    comboOperacion.innerHTML = '<option value="">Option ⚙️ Seleccione una operación...</option>';
     comboOperacion.disabled = true;
     divResultados.style.display = "none";
 
@@ -344,7 +360,7 @@ function actualizarTallas() {
         const tallasFiltradas = [...new Set(bddMetas.filter(item => item.estilo === estiloSel).map(item => item.talla).filter(Boolean))];
         tallasFiltradas.sort().forEach(talla => {
             let opt = document.createElement('option');
-            opt.value = talla; opt.innerHTML = talla;
+            opt.value = talla; opt.innerHTML = `📐 Talla ${talla}`;
             comboTalla.appendChild(opt);
         });
     } else { comboTalla.disabled = true; }
@@ -356,7 +372,7 @@ function actualizarOperaciones() {
     const comboOperacion = document.getElementById('operacion');
     const divResultados = document.getElementById('resultados');
     
-    comboOperacion.innerHTML = '<option value="">Seleccione una operación...</option>';
+    comboOperacion.innerHTML = '<option value="">👒 Seleccione una operación...</option>';
     divResultados.style.display = "none";
 
     if(tallaSel) {
@@ -364,7 +380,7 @@ function actualizarOperaciones() {
         const operacionesFiltradas = [...new Set(bddMetas.filter(item => item.estilo === estiloSel && item.talla === tallaSel).map(item => item.operacion).filter(Boolean))];
         operacionesFiltradas.sort().forEach(op => {
             let opt = document.createElement('option');
-            opt.value = op; opt.innerHTML = op;
+            opt.value = op; opt.innerHTML = `⚙️ ${op}`;
             comboOperacion.appendChild(opt);
         });
     } else { comboOperacion.disabled = true; }
@@ -381,16 +397,16 @@ function calcularMetasTiempoReal() {
         return; 
     }
 
-    const registro = bddMetas.find(item => item.get && item.estilo === e && item.talla === t && item.operacion === o || item.estilo === e && item.talla === t && item.operacion === o);
+    const registro = bddMetas.find(item => item.estilo === e && item.talla === t && item.operacion === o);
 
     if(registro) {
         const metaDocenas = registro.metaDocenas;
         const docenasPorHora = (metaDocenas / HORAS_TURNO).toFixed(2);
         const piezasPorMinuto = ((metaDocenas * 12) / (HORAS_TURNO * 60)).toFixed(2);
 
-        document.getElementById('resMeta').innerText = metaDocenas;
-        document.getElementById('resDozenHora').innerText = docenasPorHora;
-        document.getElementById('resPzasMin').innerText = piezasPorMinuto;
+        document.getElementById('resMeta').innerText = `${metaDocenas} 💰`;
+        document.getElementById('resDozenHora').innerText = `${docenasPorHora} 📦`;
+        document.getElementById('resPzasMin').innerText = `${piezasPorMinuto} ⚡`;
         divResultados.style.display = "block";
     } else {
         divResultados.style.display = "none";
