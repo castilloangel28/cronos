@@ -267,11 +267,11 @@
 const SHEET_ID = '1SBsIDmwEZTarfIvZsuOl1nTC0AbkIDZa'; 
 
 let bddMetas = [];
-const HORAS_TURNO = 9;
+const HORAS_TURNO = 11;
 
 // Usuarios autorizados con sus emojis insignia de la tripulación
 const usuariosAutorizados = [
-    { pin: "2004", nombre: "Angel Castillo 👒" },
+    { pin: "2004", nombre: "Angel Castillo 𓊝" },
     { pin: "5863", nombre: "Kevin Ramón Pineda ⚔️" },
     { pin: "8198", nombre: "Carlos David Garcia 🦅" },
     { pin: "1734", nombre: "Libny Castillo ⚡" },
@@ -296,7 +296,7 @@ function verificarAcceso() {
     if (usuario) {
         document.getElementById('loginSection').style.display = 'none';
         document.getElementById('mainSection').style.display = 'block';
-        document.getElementById('msgBienvenida').innerText = `🏴‍☠️ ¡Al abordaje, Nakama ${usuario.nombre}!`;
+        document.getElementById('msgBienvenida').innerText = `🏴‍☠️ ¡Al abordaje, Nōryoku-sha! ${usuario.nombre}!`;
         conectarConGoogleSheets();
     } else {
         alert("❌ ¡PIN incorrecto, marinero! Intente de nuevo.");
@@ -372,7 +372,8 @@ function actualizarOperaciones() {
     const comboOperacion = document.getElementById('operacion');
     const divResultados = document.getElementById('resultados');
     
-    comboOperacion.innerHTML = '<option value="">👒 Seleccione una operación...</option>';
+    comboOperacion.innerHTML = '<option value="">👒
+𓊝 Seleccione una operación...</option>';
     divResultados.style.display = "none";
 
     if(tallaSel) {
