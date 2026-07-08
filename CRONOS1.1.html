@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRONOS - Sistema de Métricas</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background-color: #f4f7f6; color: #333; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 450px; width: 100%; text-align: center; }
+        h1 { color: #1a3a5f; margin-bottom: 5px; letter-spacing: 2px; }
+        .subtitle { color: #666; font-size: 14px; margin-bottom: 25px; }
+        
+        /* Pantalla de Login */
+        #loginSection { display: block; }
+        .pin-input { font-size: 24px; text-align: center; letter-spacing: 10px; padding: 10px; width: 80%; border-radius: 5px; border: 1px solid #ccc; margin-top: 15px; }
+        
+        /* Pantalla Principal (Oculta al inicio) */
+        #mainSection { display: none; }
+        .bienvenida { color: #27ae60; font-weight: bold; margin-bottom: 20px; font-size: 16px; }
+        
+        label { display: block; text-align: left; font-weight: bold; margin-top: 15px; color: #555; }
+        select, button { width: 100%; padding: 12px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px; box-sizing: border-box; }
+        button { background-color: #1a3a5f; color: white; border: none; font-weight: bold; cursor: pointer; margin-top: 25px; }
+        button:hover { background-color: #0e243e; }
+        
+        .resultados { margin-top: 25px; padding-top: 20px; border-top: 2px solid #eee; text-align: left; display: none; }
+        .resultado-item { margin-bottom: 10px; font-size: 16px; }
+        .resultado-val { font-weight: bold; color: #1a3a5f; float: right; }
+        #loading { color: #e67e22; font-weight: bold; margin-bottom: 15px; display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>CRONOS</h1>
+    <div class="subtitle">Métricas de Producción</div>
+
+    <div id="loginSection">
+        <label style="text-align: center;" for="userPin">Ingrese su PIN Personal</label>
+        <input type="password" id="userPin" class="pin-input" maxlength="4" placeholder="••••">
+        <button onclick="verificarAcceso()">ENTRAR</button>
+    </div>
+
+    <div id="mainSection">
+        <div id="msgBienvenida" class="bienvenida"></div>
+        <div id="loading">Cargando base de datos de producción...</div>
+
+        <label for="estilo">Estilo</label>
+        <select id="estilo" onchange="actualizarTallas()" disabled>
+            <option value="">Seleccione un estilo...</option>
+        </select>
+
+        <label for="talla">Talla</label>
+        <select id="talla" onchange="actualizarOperaciones()" disabled>
+            <option value="">Seleccione una talla...</option>
+        </select>
+
+        <label for="operacion">Operación</label>
+        <select id="operacion" disabled>
+            <option value="">Seleccione una operación...</option>
+        </select>
+
+        <button onclick="calcularMetas()">BUSCAR</button>
+
+        <div id="resultados" class="resultados">
+            <div class="resultado-item">Meta por Turno: <span id="resMeta" class="resultado-val">0</span> docenas</div>
+            <div class="resultado-item">Docenas por Hora: <span id="resDozenHora" class="resultado-val">0</span> dz/hr</div>
+            <div class="resultado-item">Piezas por Minuto: <span id="resPzasMin" class="resultado-val">0</span> pzas/min</div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ID de tu Google Sheets vinculada
+const SHEET_ID = '1SBsIDmwEZTarfIvZsuOl1nTC0AbkIDZa'; 
+
+let bddMetas = [];
+const HORAS_TURNO = 11; // Puedes cambiar las horas del turno según la jornada fija de la planta
+
+// Lista exacta cargada desde tu base de datos de usuarios
+const usuariosAutorizados = [
+    { pin: "2004", nombre: "Angel Castillo" },
+    { pin: "5863", nombre: "Kevin Ramón Pineda" },
+    { pin: "8198", nombre: "Carlos David Garcia 🦅" },
+    { pin: "1734", nombre: "Libny Castillo" },
+    { pin: "4321", nombre: "Derick Alexander Carvajal" },
+    { pin: "3455", nombre: "Josué Rivera" },
+    { pin: "1301", nombre: "Jack Perdomo" },
+    { pin: "2064", nombre: "Arnoldo Alvarenga🤠" },
+    { pin: "2711", nombre: "Yervi Mejia" },
+    { pin: "3855", nombre: "Yeison Murillo" },
+    { pin: "5037", nombre: "Kevin Díaz" },
+    { pin: "4005", nombre: "Erik Rosales" },
+    { pin: "1507", nombre: "Fernando Sanchez" },
+    { pin: "3307", nombre: "Edwin Alvarado" },
+    { pin: "3310", nombre: "Angel Flores" },
+    { pin: "1800", nombre: "Usuario Invitado" }
+];
+
+// 1. VERIFICAR PIN DE ACCESO
+function verificarAcceso() {
+    const pinIngresado = document.getElementById('userPin').value;
+    const usuario = usuariosAutorizados.find(u => u.pin === pinIngresado);
+
+    if (usuario) {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('mainSection').style.display = 'block';
+        document.getElementById('msgBienvenida').innerText = `¡Bienvenido(a), ${usuario.nombre}!`;
+        
+        // Ejecuta la descarga en la nube en tiempo real al ingresar
+        conectarConGoogleSheets();
+    } else {
+        alert("PIN incorrecto. Intente de nuevo.");
+        document.getElementById('userPin').value = "";
+    }
+}
+
+// 2. CONECTAR Y MAPEAR COLUMNAS SEGÚN TU EXCEL REAL
+function conectarConGoogleSheets() {
+    document.getElementById('loading').style.display = 'block';
+    
+    // Apunta de manera estricta a la pestaña 'Produccion'
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Produccion`;
+
+    fetch(url)
+        .then(res => res.text())
+        .then(data => {
+            const jsonText = data.substring(47, data.length - 2);
+            const json = JSON.parse(jsonText);
+            const filas = json.table.rows;
+
+            // MAPEO CORRECTO DE COLUMNAS SEGÚN TU IMAGEN:
+            // f.c[0] = ESTILO (Columna A)
+            // f.c[1] = TALLA (Columna B)
+            // f.c[3] = OPERACION (Columna D)
+            // f.c[5] = META (Columna F)
+            bddMetas = filas.map(f => ({
+                estilo: f.c[0] ? f.c[0].v.toString().trim() : '',
+                talla: f.c[1] ? f.c[1].v.toString().trim() : '',
+                operacion: f.c[3] ? f.c[3].v.toString().trim() : '',
+                metaDocenas: f.c[5] ? parseFloat(f.c[5].v) : 0
+            })).filter(item => item.estilo !== "ESTILO"); // Filtrar fila de encabezados si se pasa
+
+            document.getElementById('loading').style.display = 'none';
+            inicializarEstilos();
+        })
+        .catch(err => {
+            alert("Error de conexión. Verifica que el archivo de Sheets esté compartido públicamente como lector.");
+            console.error(err);
+        });
+}
+
+function inicializarEstilos() {
+    const comboEstilo = document.getElementById('estilo');
+    comboEstilo.innerHTML = '<option value="">Seleccione un estilo...</option>';
+    comboEstilo.disabled = false;
+    
+    const estilosUnicos = [...new Set(bddMetas.map(item => item.estilo).filter(Boolean))];
+    estilosUnicos.sort().forEach(estilo => {
+        let opt = document.createElement('option');
+        opt.value = estilo; opt.innerHTML = estilo;
+        comboEstilo.appendChild(opt);
+    });
+}
+
+function actualizarTallas() {
+    const estiloSel = document.getElementById('estilo').value;
+    const comboTalla = document.getElementById('talla');
+    const comboOperacion = document.getElementById('operacion');
+    
+    comboTalla.innerHTML = '<option value="">Seleccione una talla...</option>';
+    comboOperacion.innerHTML = '<option value="">Seleccione una operación...</option>';
+    comboOperacion.disabled = true;
+
+    if(estiloSel) {
+        comboTalla.disabled = false;
+        const tallasFiltradas = [...new Set(bddMetas.filter(item => item.estilo === estiloSel).map(item => item.talla).filter(Boolean))];
+        tallasFiltradas.sort().forEach(talla => {
+            let opt = document.createElement('option');
+            opt.value = talla; opt.innerHTML = talla;
+            comboTalla.appendChild(opt);
+        });
+    } else { comboTalla.disabled = true; }
+}
+
+function actualizarOperaciones() {
+    const estiloSel = document.getElementById('estilo').value;
+    const tallaSel = document.getElementById('talla').value;
+    const comboOperacion = document.getElementById('operacion');
+    comboOperacion.innerHTML = '<option value="">Seleccione una operación...</option>';
+
+    if(tallaSel) {
+        comboOperacion.disabled = false;
+        const operacionesFiltradas = [...new Set(bddMetas.filter(item => item.estilo === estiloSel && item.talla === tallaSel).map(item => item.operacion).filter(Boolean))];
+        operacionesFiltradas.sort().forEach(op => {
+            let opt = document.createElement('option');
+            opt.value = op; opt.innerHTML = op;
+            comboOperacion.appendChild(opt);
+        });
+    } else { comboOperacion.disabled = true; }
+}
+
+function calcularMetas() {
+    const e = document.getElementById('estilo').value;
+    const t = document.getElementById('talla').value;
+    const o = document.getElementById('operacion').value;
+    const divResultados = document.getElementById('resultados');
+
+    if(!e || !t || !o) { alert("Por favor, seleccione todos los requerimientos."); return; }
+
+    const registro = bddMetas.find(item => item.estilo === e && item.talla === t && item.operacion === o);
+
+    if(registro) {
+        const metaDocenas = registro.metaDocenas;
+        const docenasPorHora = (metaDocenas / HORAS_TURNO).toFixed(2);
+        const piezasPorMinuto = ((metaDocenas * 12) / (HORAS_TURNO * 60)).toFixed(2);
+
+        document.getElementById('resMeta').innerText = metaDocenas;
+        document.getElementById('resDozenHora').innerText = docenasPorHora;
+        document.getElementById('resPzasMin').innerText = piezasPorMinuto;
+        divResultados.style.display = "block";
+    } else {
+        alert("Combinación no encontrada en los registros vigentes.");
+        divResultados.style.display = "none";
+    }
+}
+</script>
+</body>
+</html>
