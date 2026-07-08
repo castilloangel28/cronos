@@ -6,7 +6,7 @@
     <title>CRONOS -🧭 The Log Pose BD🧭 Neon</title>
     <!-- Importación de Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Orbitron:wght@900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
-    
+
     <style>
         body { 
             font-family: 'Montserrat', sans-serif;
@@ -33,7 +33,7 @@
             background-size: 20px 20px;
             z-index: -1;
         }
-        
+
         .container { 
             background-color: rgba(4, 4, 10, 0.92); 
             padding: 30px; 
@@ -61,7 +61,33 @@
             pointer-events: none;
             filter: drop-shadow(0 0 10px #ffaa00);
         }
-        
+
+        /* --- ANIMACIÓN DEL BARCO PIRATA MUGIWARA --- */
+        .pirate-ship-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 10px auto;
+            animation: floatShip 4s ease-in-out infinite;
+            filter: drop-shadow(0 0 8px #ffaa00);
+        }
+
+        @keyframes floatShip {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(3deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        .strawhat-flag {
+            animation: waveFlag 0.8s ease-in-out infinite alternate;
+            transform-origin: left center;
+        }
+
+        @keyframes waveFlag {
+            0% { transform: skewY(-2deg) scaleX(0.95); }
+            100% { transform: skewY(4deg) scaleX(1.05); }
+        }
+        /* ------------------------------------------- */
+
         h1 { 
             font-family: 'Orbitron', sans-serif;
             color: #ff0055; 
@@ -71,7 +97,7 @@
             text-shadow: 0 0 10px #ff0055, 0 0 25px #ff0055, 0 0 50px #ff0055;
             font-weight: 900;
         }
-        
+
         .subtitle { 
             font-family: 'Rajdhani', sans-serif;
             color: #00f3ff; 
@@ -81,9 +107,9 @@
             letter-spacing: 4px;
             text-shadow: 0 0 10px #00f3ff;
         }
-        
+
         #loginSection { display: block; position: relative; z-index: 2; }
-        
+
         .pin-input { 
             font-family: 'Montserrat', sans-serif;
             font-size: 26px; 
@@ -106,9 +132,9 @@
             color: #ff0055;
             text-shadow: 0 0 10px #ff0055;
         }
-        
+
         #mainSection { display: none; position: relative; z-index: 2; }
-        
+
         .bienvenida { 
             font-family: 'Rajdhani', sans-serif;
             color: #39ff14; 
@@ -118,7 +144,7 @@
             text-shadow: 0 0 10px #39ff14, 0 0 20px #39ff14;
             letter-spacing: 1px;
         }
-        
+
         label { 
             font-family: 'Rajdhani', sans-serif;
             display: block; 
@@ -131,7 +157,7 @@
             letter-spacing: 2px;
             text-transform: uppercase;
         }
-        
+
         select { 
             font-family: 'Montserrat', sans-serif;
             width: 100%; 
@@ -160,7 +186,7 @@
             box-shadow: none;
             text-shadow: none;
         }
-        
+
         .btn-neon { 
             font-family: 'Rajdhani', sans-serif;
             width: 100%; 
@@ -185,7 +211,7 @@
             box-shadow: 0 0 25px #ffaa00;
             text-shadow: none;
         }
-        
+
         .resultados { 
             margin-top: 30px; 
             padding-top: 20px; 
@@ -209,7 +235,7 @@
             text-shadow: 0 0 12px #ff0055, 0 0 25px #ff0055;
             font-size: 22px;
         }
-        
+
         #loading { 
             font-family: 'Rajdhani', sans-serif;
             color: #ffaa00; 
@@ -224,6 +250,46 @@
 <body>
 
 <div class="container">
+    <!-- SVG Vectorial del Barco Pirata con la Bandera de Sombrero de Paja -->
+    <div class="pirate-ship-container">
+        <svg viewBox="0 0 100 100" width="100%" height="100%">
+            <!-- Mar/Olas pequeñas de apoyo -->
+            <path d="M20 85 Q 35 80, 50 85 T 80 85" fill="none" stroke="#00f3ff" stroke-width="2" opacity="0.4"/>
+            
+            <!-- Casco del Barco -->
+            <path d="M25 65 L 30 80 Q 50 85, 70 80 L 78 65 Z" fill="#5c4033" stroke="#ffaa00" stroke-width="1.5" />
+            <path d="M 23 65 L 79 65" fill="none" stroke="#ffaa00" stroke-width="2"/>
+            
+            <!-- Mástil Principal -->
+            <line x1="50" y1="20" x2="50" y2="65" stroke="#ffaa00" stroke-width="3"/>
+            
+            <!-- Bandera de los Mugiwara (Con animación de oleaje) -->
+            <g class="strawhat-flag">
+                <!-- Fondo de la Bandera negra -->
+                <rect x="52" y="22" width="34" height="22" fill="#111" rx="2" stroke="#fff" stroke-width="0.5"/>
+                
+                <!-- Calavera (Base) -->
+                <circle cx="67" cy="31" r="5" fill="#fff" />
+                <rect x="65" y="34" width="4" height="4" fill="#fff" rx="1"/>
+                <!-- Ojos de la Calavera -->
+                <circle cx="65.5" cy="30.5" r="1.2" fill="#000" />
+                <circle cx="68.5" cy="30.5" r="1.2" fill="#000" />
+                <!-- Huesos Cruzados de fondo -->
+                <path d="M56 25 L 78 39 M 56 39 L 78 25" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
+                
+                <!-- Sombrero de Paja icónico de Luffy -->
+                <path d="M59 28 Q 67 24, 75 28" fill="none" stroke="#ffcc00" stroke-width="3" stroke-linecap="round"/>
+                <path d="M63 27 Q 67 21, 71 27" fill="#ffcc00"/>
+                <!-- Cinta roja del sombrero -->
+                <path d="M63 26 Q 67 24, 71 26" fill="none" stroke="#ff0000" stroke-width="1"/>
+            </g>
+            
+            <!-- Velas del barco recogidas/decorativas -->
+            <path d="M35 35 Q 45 32, 48 38 Q 42 48, 35 35" fill="#eee" opacity="0.8"/>
+            <path d="M52 48 Q 58 42, 68 45 Q 60 55, 52 48" fill="#eee" opacity="0.8"/>
+        </svg>
+    </div>
+
     <h1>⚓ CRONOS ⚓</h1>
     <div class="subtitle">🏴‍☠️ THE METALOGPOSE 🏴‍☠️</div>
 
@@ -241,7 +307,7 @@
 
         <label for="estilo">🎽 Estilo (Logpose)</label>
         <select id="estilo" onchange="actualizarTallas()" disabled>
-            <option value=""🏴‍☠️ Seleccione un estilo...</option>
+            <option value="">🏴‍☠️ Seleccione un estilo...</option>
         </select>
 
         <label for="talla">🍈 Talla (Medida)</label>
@@ -282,7 +348,7 @@ const usuariosAutorizados = [
     { pin: "2711", nombre: "Yervi Mejia 🐯" },
     { pin: "3855", nombre: "Yeison Murillo 💀" },
     { pin: "5037", nombre: "Kevin Díaz 🍃" },
-    { pin: "4005", nombre: "Erik Rosales ❄️" },
+    { pin: "4005", stroke: "", nombre: "Erik Rosales ❄️" },
     { pin: "1507", nombre: "Fernando Sanchez 🦾" },
     { pin: "3307", nombre: "Edwin Alvarado 👑" },
     { pin: "3310", nombre: "Angel Flores 🏹" },
@@ -335,7 +401,7 @@ function inicializarEstilos() {
     const comboEstilo = document.getElementById('estilo');
     comboEstilo.innerHTML = '<option value="">🗺️ Seleccione un estilo...</option>';
     comboEstilo.disabled = false;
-    
+
     const estilosUnicos = [...new Set(bddMetas.map(item => item.estilo).filter(Boolean))];
     estilosUnicos.sort().forEach(estilo => {
         let opt = document.createElement('option');
@@ -349,9 +415,9 @@ function actualizarTallas() {
     const comboTalla = document.getElementById('talla');
     const comboOperacion = document.getElementById('operacion');
     const divResultados = document.getElementById('resultados');
-    
+
     comboTalla.innerHTML = '<option value="">⚔️ Seleccione una talla...</option>';
-    comboOperacion.innerHTML = '<option value="">Option ⚙️ Seleccione una operación...</option>';
+    comboOperacion.innerHTML = '<option value="">⚙️ Seleccione una operación...</option>';
     comboOperacion.disabled = true;
     divResultados.style.display = "none";
 
@@ -371,9 +437,8 @@ function actualizarOperaciones() {
     const tallaSel = document.getElementById('talla').value;
     const comboOperacion = document.getElementById('operacion');
     const divResultados = document.getElementById('resultados');
-    
-    comboOperacion.innerHTML = '<option value="">👒
-𓊝 Seleccione una operación...</option>';
+
+    comboOperacion.innerHTML = '<option value="">👒 𓊝 Seleccione una operación...</option>';
     divResultados.style.display = "none";
 
     if(tallaSel) {
