@@ -3,47 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRONOS - Sistema de Métricas</title>
+    <title>CRONOS - Nakama Realtime Neon</title>
+    <!-- Importación de Google Fonts: Orbitron, Rajdhani y Montserrat -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Orbitron:wght@900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    
     <style>
-        body { font-family: 'Arial', sans-serif; background-color: #f4f7f6; color: #333; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .container { background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 450px; width: 100%; text-align: center; }
-        h1 { color: #1a3a5f; margin-bottom: 5px; letter-spacing: 2px; }
-        .subtitle { color: #666; font-size: 14px; margin-bottom: 25px; }
+        body { 
+            font-family: 'Montserrat', sans-serif;
+            /* Fondo ultra oscuro con silueta temática de One Piece en el centro */
+            background: linear-gradient(rgba(0, 0, 0, 0.93), rgba(5, 5, 10, 0.97)), 
+                        url('https://images8.alphacoders.com/134/1345917.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #00f3ff; 
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            box-sizing: border-box;
+            text-shadow: 0 0 5px #00f3ff;
+        }
         
-        /* Pantalla de Login */
+        /* Contenedor con super resplandor Neón Cian */
+        .container { 
+            background-color: rgba(5, 5, 12, 0.9); 
+            padding: 30px; 
+            border-radius: 20px; 
+            border: 3px solid #00f3ff;
+            box-shadow: 0 0 20px #00f3ff, inset 0 0 15px rgba(0, 243, 255, 0.3); 
+            max-width: 450px; 
+            width: 100%; 
+            text-align: center;
+            backdrop-filter: blur(10px);
+            margin: auto;
+        }
+        
+        /* Título Principal usando Orbitron - Neón Magenta Intenso */
+        h1 { 
+            font-family: 'Orbitron', sans-serif;
+            color: #ff0055; 
+            margin-bottom: 2px; 
+            letter-spacing: 5px; 
+            font-size: 38px;
+            text-shadow: 0 0 10px #ff0055, 0 0 25px #ff0055, 0 0 50px #ff0055;
+            font-weight: 900;
+        }
+        
+        .subtitle { 
+            font-family: 'Rajdhani', sans-serif;
+            color: #00f3ff; 
+            font-size: 16px; 
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 0 0 10px #00f3ff;
+        }
+        
         #loginSection { display: block; }
-        .pin-input { font-size: 24px; text-align: center; letter-spacing: 10px; padding: 10px; width: 80%; border-radius: 5px; border: 1px solid #ccc; margin-top: 15px; }
         
-        /* Pantalla Principal (Oculta al inicio) */
+        /* Input del PIN - Neón Morado con letras Neón Cian */
+        .pin-input { 
+            font-family: 'Montserrat', sans-serif;
+            font-size: 26px; 
+            text-align: center; 
+            letter-spacing: 12px; 
+            padding: 12px; 
+            width: 85%; 
+            border-radius: 10px; 
+            border: 2px solid #9d00ff; 
+            background-color: #000;
+            color: #00f3ff;
+            margin-top: 15px; 
+            box-shadow: 0 0 15px #9d00ff, inset 0 0 5px #9d00ff;
+            outline: none;
+            text-shadow: 0 0 10px #00f3ff;
+        }
+        .pin-input:focus {
+            border-color: #ff0055;
+            box-shadow: 0 0 20px #ff0055;
+            color: #ff0055;
+            text-shadow: 0 0 10px #ff0055;
+        }
+        
         #mainSection { display: none; }
-        .bienvenida { color: #27ae60; font-weight: bold; margin-bottom: 20px; font-size: 16px; }
         
-        label { display: block; text-align: left; font-weight: bold; margin-top: 15px; color: #555; }
-        select, button { width: 100%; padding: 12px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px; box-sizing: border-box; }
-        button { background-color: #1a3a5f; color: white; border: none; font-weight: bold; cursor: pointer; margin-top: 25px; }
-        button:hover { background-color: #0e243e; }
+        /* Bienvenida usando Rajdhani - Neón Verde Lima */
+        .bienvenida { 
+            font-family: 'Rajdhani', sans-serif;
+            color: #39ff14; 
+            font-weight: bold; 
+            margin-bottom: 25px; 
+            font-size: 22px; 
+            text-shadow: 0 0 10px #39ff14, 0 0 20px #39ff14;
+            letter-spacing: 1px;
+        }
         
-        .resultados { margin-top: 25px; padding-top: 20px; border-top: 2px solid #eee; text-align: left; display: none; }
-        .resultado-item { margin-bottom: 10px; font-size: 16px; }
-        .resultado-val { font-weight: bold; color: #1a3a5f; float: right; }
-        #loading { color: #e67e22; font-weight: bold; margin-bottom: 15px; display: none; }
+        label { 
+            font-family: 'Rajdhani', sans-serif;
+            display: block; 
+            text-align: left; 
+            font-weight: bold; 
+            margin-top: 18px; 
+            color: #00f3ff; 
+            text-shadow: 0 0 10px #00f3ff;
+            font-size: 16px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        /* Selectores - Todo Neón Morado y letras brillantes */
+        select { 
+            font-family: 'Montserrat', sans-serif;
+            width: 100%; 
+            padding: 12px; 
+            margin-top: 6px; 
+            border-radius: 10px; 
+            font-size: 15px; 
+            box-sizing: border-box; 
+            outline: none;
+            background-color: #000;
+            color: #00f3ff;
+            border: 2px solid #9d00ff;
+            box-shadow: 0 0 12px #9d00ff;
+            cursor: pointer;
+            font-weight: bold;
+            text-shadow: 0 0 5px #00f3ff;
+        }
+        select option {
+            background-color: #000;
+            color: #00f3ff;
+        }
+        select:disabled {
+            background-color: #111;
+            border-color: #333;
+            color: #444;
+            box-shadow: none;
+            text-shadow: none;
+        }
+        
+        /* Botón de Entrada General Neón */
+        .btn-neon { 
+            font-family: 'Rajdhani', sans-serif;
+            width: 100%; 
+            padding: 14px; 
+            margin-top: 30px; 
+            border-radius: 10px; 
+            font-size: 18px; 
+            box-sizing: border-box; 
+            background-color: transparent; 
+            color: #ffaa00; 
+            border: 2px solid #ffaa00; 
+            font-weight: bold; 
+            cursor: pointer; 
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px #ffaa00;
+            box-shadow: 0 0 15px rgba(255, 170, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+        .btn-neon:hover { 
+            background-color: #ffaa00;
+            color: #000;
+            box-shadow: 0 0 25px #ffaa00;
+            text-shadow: none;
+        }
+        
+        /* Bloque de Respuestas en Tiempo Real */
+        .resultados { 
+            margin-top: 30px; 
+            padding-top: 20px; 
+            border-top: 2px dashed #9d00ff; 
+            text-align: left; 
+            display: none; 
+        }
+        .resultado-item { 
+            font-family: 'Rajdhani', sans-serif;
+            margin-bottom: 14px; 
+            font-size: 19px; 
+            color: #00f3ff;
+            text-shadow: 0 0 8px #00f3ff;
+            letter-spacing: 1px;
+        }
+        /* Valores numéricos resaltados en Neón Magenta gigante usando Orbitron */
+        .resultado-val { 
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold; 
+            color: #ff0055; 
+            float: right; 
+            text-shadow: 0 0 12px #ff0055, 0 0 25px #ff0055;
+            font-size: 22px;
+        }
+        
+        #loading { 
+            font-family: 'Rajdhani', sans-serif;
+            color: #ffaa00; 
+            font-weight: bold; 
+            margin-bottom: 15px; 
+            display: none; 
+            text-shadow: 0 0 10px #ffaa00;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>CRONOS</h1>
-    <div class="subtitle">Métricas de Producción</div>
+    <div class="subtitle">Nakama Realtime</div>
 
+    <!-- SECCIÓN 1: LOGIN POR PIN -->
     <div id="loginSection">
-        <label style="text-align: center;" for="userPin">Ingrese su PIN Personal</label>
+        <label style="text-align: center;" for="userPin">Ingrese su PIN de Tripulación</label>
         <input type="password" id="userPin" class="pin-input" maxlength="4" placeholder="••••">
-        <button onclick="verificarAcceso()">ENTRAR</button>
+        <button class="btn-neon" onclick="verificarAcceso()">INGRESAR</button>
     </div>
 
+    <!-- SECCIÓN 2: BUSCADOR PRINCIPAL (TIEMPO REAL) -->
     <div id="mainSection">
         <div id="msgBienvenida" class="bienvenida"></div>
-        <div id="loading">Cargando base de datos de producción...</div>
+        <div id="loading">Sincronizando Bitácora Marina...</div>
 
         <label for="estilo">Estilo</label>
         <select id="estilo" onchange="actualizarTallas()" disabled>
@@ -55,13 +233,13 @@
             <option value="">Seleccione una talla...</option>
         </select>
 
+        <!-- Al cambiar la operación calcula en tiempo real de inmediato -->
         <label for="operacion">Operación</label>
-        <select id="operacion" disabled>
+        <select id="operacion" onchange="calcularMetasTiempoReal()" disabled>
             <option value="">Seleccione una operación...</option>
         </select>
 
-        <button onclick="calcularMetas()">BUSCAR</button>
-
+        <!-- RESULTADOS AUTOMÁTICOS ASÍNCRONOS -->
         <div id="resultados" class="resultados">
             <div class="resultado-item">Meta por Turno: <span id="resMeta" class="resultado-val">0</span> docenas</div>
             <div class="resultado-item">Docenas por Hora: <span id="resDozenHora" class="resultado-val">0</span> dz/hr</div>
@@ -71,13 +249,11 @@
 </div>
 
 <script>
-// ID de tu Google Sheets vinculada
 const SHEET_ID = '1SBsIDmwEZTarfIvZsuOl1nTC0AbkIDZa'; 
 
 let bddMetas = [];
-const HORAS_TURNO = 11; // Puedes cambiar las horas del turno según la jornada fija de la planta
+const HORAS_TURNO = 9;
 
-// Lista exacta cargada desde tu base de datos de usuarios
 const usuariosAutorizados = [
     { pin: "2004", nombre: "Angel Castillo" },
     { pin: "5863", nombre: "Kevin Ramón Pineda" },
@@ -97,7 +273,6 @@ const usuariosAutorizados = [
     { pin: "1800", nombre: "Usuario Invitado" }
 ];
 
-// 1. VERIFICAR PIN DE ACCESO
 function verificarAcceso() {
     const pinIngresado = document.getElementById('userPin').value;
     const usuario = usuariosAutorizados.find(u => u.pin === pinIngresado);
@@ -105,9 +280,7 @@ function verificarAcceso() {
     if (usuario) {
         document.getElementById('loginSection').style.display = 'none';
         document.getElementById('mainSection').style.display = 'block';
-        document.getElementById('msgBienvenida').innerText = `¡Bienvenido(a), ${usuario.nombre}!`;
-        
-        // Ejecuta la descarga en la nube en tiempo real al ingresar
+        document.getElementById('msgBienvenida').innerText = `¡Al abordaje, Nakama ${usuario.nombre}!`;
         conectarConGoogleSheets();
     } else {
         alert("PIN incorrecto. Intente de nuevo.");
@@ -115,11 +288,8 @@ function verificarAcceso() {
     }
 }
 
-// 2. CONECTAR Y MAPEAR COLUMNAS SEGÚN TU EXCEL REAL
 function conectarConGoogleSheets() {
     document.getElementById('loading').style.display = 'block';
-    
-    // Apunta de manera estricta a la pestaña 'Produccion'
     const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Produccion`;
 
     fetch(url)
@@ -129,23 +299,18 @@ function conectarConGoogleSheets() {
             const json = JSON.parse(jsonText);
             const filas = json.table.rows;
 
-            // MAPEO CORRECTO DE COLUMNAS SEGÚN TU IMAGEN:
-            // f.c[0] = ESTILO (Columna A)
-            // f.c[1] = TALLA (Columna B)
-            // f.c[3] = OPERACION (Columna D)
-            // f.c[5] = META (Columna F)
             bddMetas = filas.map(f => ({
                 estilo: f.c[0] ? f.c[0].v.toString().trim() : '',
                 talla: f.c[1] ? f.c[1].v.toString().trim() : '',
                 operacion: f.c[3] ? f.c[3].v.toString().trim() : '',
                 metaDocenas: f.c[5] ? parseFloat(f.c[5].v) : 0
-            })).filter(item => item.estilo !== "ESTILO"); // Filtrar fila de encabezados si se pasa
+            })).filter(item => item.estilo !== "ESTILO");
 
             document.getElementById('loading').style.display = 'none';
             inicializarEstilos();
         })
         .catch(err => {
-            alert("Error de conexión. Verifica que el archivo de Sheets esté compartido públicamente como lector.");
+            alert("Error de conexión con la base de datos.");
             console.error(err);
         });
 }
@@ -167,10 +332,12 @@ function actualizarTallas() {
     const estiloSel = document.getElementById('estilo').value;
     const comboTalla = document.getElementById('talla');
     const comboOperacion = document.getElementById('operacion');
+    const divResultados = document.getElementById('resultados');
     
     comboTalla.innerHTML = '<option value="">Seleccione una talla...</option>';
     comboOperacion.innerHTML = '<option value="">Seleccione una operación...</option>';
     comboOperacion.disabled = true;
+    divResultados.style.display = "none";
 
     if(estiloSel) {
         comboTalla.disabled = false;
@@ -187,7 +354,10 @@ function actualizarOperaciones() {
     const estiloSel = document.getElementById('estilo').value;
     const tallaSel = document.getElementById('talla').value;
     const comboOperacion = document.getElementById('operacion');
+    const divResultados = document.getElementById('resultados');
+    
     comboOperacion.innerHTML = '<option value="">Seleccione una operación...</option>';
+    divResultados.style.display = "none";
 
     if(tallaSel) {
         comboOperacion.disabled = false;
@@ -200,15 +370,18 @@ function actualizarOperaciones() {
     } else { comboOperacion.disabled = true; }
 }
 
-function calcularMetas() {
+function calcularMetasTiempoReal() {
     const e = document.getElementById('estilo').value;
     const t = document.getElementById('talla').value;
     const o = document.getElementById('operacion').value;
     const divResultados = document.getElementById('resultados');
 
-    if(!e || !t || !o) { alert("Por favor, seleccione todos los requerimientos."); return; }
+    if(!e || !t || !o) { 
+        divResultados.style.display = "none";
+        return; 
+    }
 
-    const registro = bddMetas.find(item => item.estilo === e && item.talla === t && item.operacion === o);
+    const registro = bddMetas.find(item => item.get && item.estilo === e && item.talla === t && item.operacion === o || item.estilo === e && item.talla === t && item.operacion === o);
 
     if(registro) {
         const metaDocenas = registro.metaDocenas;
@@ -220,7 +393,6 @@ function calcularMetas() {
         document.getElementById('resPzasMin').innerText = piezasPorMinuto;
         divResultados.style.display = "block";
     } else {
-        alert("Combinación no encontrada en los registros vigentes.");
         divResultados.style.display = "none";
     }
 }
